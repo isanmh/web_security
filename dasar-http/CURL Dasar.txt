@@ -1,0 +1,14 @@
+==========curl method==========
+curl http://localhost/web_security/dasar-http/method.php
+
+curl -X PUT -A "Browser Saya" http://localhost/web_security/dasar-http/method.php
+
+curl -v -X PUT "http://localhost/web_security/dasar-http/method.php?name=admin&age=30"
+
+curl -v -X PUT "http://localhost/web_security/dasar-http/method.php?name=admin&age=30&x\[0\]=a&x\[1\]=b"
+
+
+==========CURL FORM==========
+curl -v -X POST -d "username=Ihsan&password=123" http://localhost/web_security/dasar-http/form.php
+
+curl -X POST -d "username=Ihsan&password=123f&isAdmin=1" http://localhost/web_security/dasar-http/form.php
